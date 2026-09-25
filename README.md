@@ -73,7 +73,7 @@ This project implements a PLC-based control system for a bottle packing line —
 
 
 
-###### **2. Why RS-Block Resets and NC/NO Contact Choices Matter**
+## **2. Why RS-Block Resets and NC/NO Contact Choices Matter**
 
 
 
@@ -93,7 +93,7 @@ This project implements a PLC-based control system for a bottle packing line —
 
 
 
-###### **3. Why Safety\_Trip Is Gated at Both the Trigger and the Coil for Capping, Labeling, and Case Packing**
+## **3. Why Safety\_Trip Is Gated at Both the Trigger and the Coil for Capping, Labeling, and Case Packing**
 
 
 
@@ -109,7 +109,7 @@ This project implements a PLC-based control system for a bottle packing line —
 
 
 
-###### **4. Why CTU0's Reset Comes Only From TP3.Q, Never From Safety\_Trip**
+## **4. Why CTU0's Reset Comes Only From TP3.Q, Never From Safety\_Trip**
 
 
 
@@ -125,7 +125,7 @@ This project implements a PLC-based control system for a bottle packing line —
 
 
 
-###### **5. The Serial, Not Pipelined, Process Flow**
+## **5. The Serial, Not Pipelined, Process Flow**
 
 
 
