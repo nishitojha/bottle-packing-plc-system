@@ -10,6 +10,7 @@ This project implements a PLC-based control system for a bottle packing line —
 
 
 
+<<<<<<< HEAD
 | # | Name | Class | Type | Location | Description |
 
 |---|------|-------|------|----------|-------------|
@@ -93,6 +94,8 @@ This project implements a PLC-based control system for a bottle packing line —
 | 38 | RS1 | Local | RS | | Set/reset latch for MainConv\_M: set by M1, reset by Stop\_PB OR Emergency\_PB. |
 
 | 39 | RS2 | Local | RS | | Set/reset latch for M1: set by To\_M\_Conv\_Sensor, reset by Stop\_PB OR Emergency\_PB. |
+=======
+>>>>>>> 946d8b8a8725cfcb5be2ee83c972bbe702ac970c
 
 
 
