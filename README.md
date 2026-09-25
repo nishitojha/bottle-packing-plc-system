@@ -9,7 +9,49 @@ This project implements a PLC-based control system for a bottle packing line —
 ###### **I/O Table :**
 
 
-https://1drv.ms/x/c/1d28b52533173d0c/IQCbw198xIr6Q5I2I3SglyJ-AbY1l75Z9DMoTKS\_PIOyuaw?e=Wqlyh41
+#	Name	Class	Type	Location	Description
+0	Emergency_PB	Local	BOOL	%IX0.0	Physical emergency stop pushbutton input. Drives Safety_Trip and Siren; sets RS0 latch.
+1	Start_PB	Local	BOOL	%IX0.1	Operator pushbutton to start the system (energizes M0 run permissive).
+2	Stop_PB	Local	BOOL	%IX0.2	Operator pushbutton for a normal  non-fault stop. Resets M0/M1 latches alongside Emergency_PB.
+3	Fill_PositionSensor	Local	BOOL	%IX0.4	Detects a bottle in position at the filling station; triggers the fill pulse timer (TP0).
+4	Fill_LevelSensor	Local	BOOL	%IX0.5	Verifies correct fill level after filling; drives RejectAcctuator_1 when fill is incorrect.
+5	Cap_PresentSensor	Local	BOOL	%IX0.6	Detects a bottle in position at the capping station; triggers the cap pulse timer (TP1).
+6	NA_LabelSensor	Local	BOOL	%IX0.7	Detects a missing/misapplied label after labeling; drives RejectAcctuator_2.
+7	To_M_Conv_Sensor	Local	BOOL	%IX1.0	Detects a bottle reaching the transfer point to the main conveyor; triggers TransferAcctuator and sets M1.
+8	CaseFull_Sensor	Local	BOOL	%IX1.1	Detects a bottle entering the case at the packing station; increments CTU0 (bottle count per case).
+9	M0	Local	BOOL	%IX1.2	Internal run-permissive bit for the front end of the line (infeed side)  set/reset via Start_PB/Stop_PB/Emergency_PB latch.
+10	M1	Local	BOOL	%IX1.3	Internal run-permissive bit for the main conveyor  set on transfer  reset via Stop_PB/Emergency_PB latch (RS2).
+11	Safety_Trip	Local	BOOL	%IX1.4	Latched fault flag (RS0) set by Emergency_PB; drives Siren  StackLight_Red  and blocks/kills station actuators during a fault.
+12	Fill_Active	Local	BOOL	%IX1.5	Output of the fill-duration pulse timer (TP0); indicates the fill station is mid-cycle.
+13	Label_PositionSensor	Local	BOOL	%IX1.6	Detects a bottle in position at the labeling station; triggers the label pulse timer (TP2).
+14	Reset_PB	Local	BOOL	%IX1.7	Operator pushbutton to clear Safety_Trip (RS0 reset)  interlocked so it only clears once Emergency_PB is physically released.
+15	InfeedConv_M	Local	BOOL	%QX0.0	Infeed conveyor motor output; runs on M0 with Safety_Trip and station-busy interlocks.
+16	MainConv_M	Local	BOOL	%QX0.1	Main conveyor motor output; runs on M1 latch (RS1)  reset by Stop_PB/Emergency_PB.
+17	FillValve	Local	BOOL	%QX0.2	Fill valve output for dispensing product into the bottle at the filling station.
+18	CapHead_M	Local	BOOL	%QX0.3	Capping head motor/actuator output; runs on Cap_PresentSensor pulse (TP1)  gated by Safety_Trip at both trigger and coil.
+19	LabelApplicator_M	Local	BOOL	%QX0.4	Label applicator motor/actuator output; runs on Label_PositionSensor pulse (TP2)  gated by Safety_Trip at both trigger and coil.
+20	RejectAcctuator_1	Local	BOOL	%QX0.5	Reject mechanism for bottles that fail the fill-level check (driven by Fill_LevelSensor).
+21	RejectAcctuator_2	Local	BOOL	%QX0.6	Reject mechanism for bottles that fail the label check (driven by NA_LabelSensor).
+22	TransferAcctuator	Local	BOOL	%QX0.7	Actuator that transfers a bottle onto the main conveyor when To_M_Conv_Sensor triggers.
+23	CasePacker_M	Local	BOOL	%QX1.0	Case packer motor output; runs for a fixed pulse (TP3) once CTU0 reaches the per-case bottle count  gated by Safety_Trip at both trigger and coil.
+24	StackLight_Green	Local	BOOL	%QX1.1	Stack light indicating the system is running normally (M0 active).
+25	StackLight_Red	Local	BOOL	%QX1.2	Stack light indicating an active fault (Safety_Trip is true).
+26	StackLight_Yellow	Local	BOOL	%QX1.3	Stack light indicating the system is halted (Emergency_PB or Stop_PB pressed  non-fault stop).
+27	Alarm_Buzzer	Local	BOOL	%QX1.4	Audible alarm output tied to Emergency_PB/Stop_PB press events.
+28	Siren	Local	BOOL	%QX1.5	Audible siren output tied to the latched Safety_Trip fault condition.
+29	TP0	Local	TP		Pulse timer (5s) controlling Fill_Active duration at the filling station.
+30	TP1	Local	TP		Pulse timer (3s) controlling CapHead_M run duration at the capping station.
+31	TP2	Local	TP		Pulse timer (3s) controlling LabelApplicator_M run duration at the labeling station.
+32	TP3	Local	TP		Pulse timer (5s) controlling CasePacker_M run duration once a case is full.
+33	CTU0	Local	CTU		Up-counter tracking bottles per case (preset 12); resets on TP3.Q (completed pack cycle only).
+34	TON0	Local	TON		Delay-on timer (3s) used as a debounce/transport delay ahead of RejectAcctuator_1.
+35	TON1	Local	TON		Delay-on timer (3s) used as a debounce/transport delay ahead of RejectAcctuator_2.
+36	TON2	Local	TON		Delay-on timer (2s) used as a transport delay ahead of TransferAcctuator.
+37	RS0	Local	RS		Set/reset latch for Safety_Trip: set by Emergency_PB  reset by Reset_PB AND (NOT Emergency_PB).
+38	RS1	Local	RS		Set/reset latch for MainConv_M: set by M1  reset by Stop_PB OR Emergency_PB.
+39	RS2	Local	RS		Set/reset latch for M1: set by To_M_Conv_Sensor  reset by Stop_PB OR Emergency_PB.
+![Uploading image.png…]()
+
 
 
 
